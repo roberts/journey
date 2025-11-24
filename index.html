@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VT320 Terminal</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Green Screen colors
+                        'terminal-green': '#66FF66', // Foreground text
+                        'terminal-black': '#000000', // Background
+                    },
+                    fontFamily: {
+                        // Define 'mono' to use the VT323 font
+                        mono: ['VT323', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Optional: Smooth blinking cursor animation */
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .cursor {
+            animation: blink 1s step-end infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-terminal-black flex items-start justify-center min-h-screen p-8">
+
+    <div class="w-full max-w-4xl text-terminal-green font-mono text-xl md:text-2xl whitespace-pre-wrap">
+        
+        <div id="typewriter-output"></div>
+        
+    </div>
+
+    <script>
+        // --- 🤖 VANILLA JAVASCRIPT FOR TYPING ANIMATION ---
+        
+        // The text content to be typed out
+        const textContent = [
+            "> INITIALIZING HACKERMAN.OS v3.2.0...",
+            " ",
+            "> CONNECTING TO QUANTUM_RELAY_01 [OK]",
+            "> FONT SET: VT323 (MONOSPACE)",
+            "> COLOR SCHEME: GREEN (P1 PHOSPHOR)",
+            " ",
+            "> **ACCESS GRANTED**",
+            " ",
+            "// Welcome to the BasePaint console. ",
+            "// All systems nominal. Proceed with caution.",
+            " ",
+            "// The time is 03:43:08 EST on 2025/11/24.",
+            " ",
+            "// The matrix is waiting. What is your command?"
+        ];
+
+        const outputElement = document.getElementById('typewriter-output');
+        const typingSpeed = 50; // Milliseconds per character
+        const lineDelay = 500;  // Milliseconds between lines
+
+        let lineIndex = 0;
+        let charIndex = 0;
+
+        function typeCharacter() {
+            if (lineIndex < textContent.length) {
+                const currentLine = textContent[lineIndex];
+
+                if (charIndex < currentLine.length) {
+                    // Type the next character
+                    outputElement.innerHTML = outputElement.innerHTML.slice(0, -1) + currentLine.charAt(charIndex) + '<span class="cursor">_</span>';
+                    charIndex++;
+                    setTimeout(typeCharacter, typingSpeed);
+                } else {
+                    // End of the current line
+                    outputElement.innerHTML = outputElement.innerHTML.slice(0, -1) + '\n'; // Add newline
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeCharacter, lineDelay);
+                }
+            } else {
+                // End of all lines: remove the final cursor and add a prompt arrow
+                outputElement.innerHTML = outputElement.innerHTML.slice(0, -1) + '>';
+            }
+        }
+
+        // Start the animation after a short delay
+        setTimeout(() => {
+            // Add initial cursor to the empty line
+            outputElement.innerHTML = '<span class="cursor">_</span>';
+            typeCharacter();
+        }, 1000);
+
+    </script>
+
+</body>
+</html>
