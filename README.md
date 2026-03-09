@@ -1,4 +1,4 @@
-# W3RD web3 journey
+# web3 journey
 
 In the beginning..
 
